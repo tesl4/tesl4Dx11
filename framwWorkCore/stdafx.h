@@ -29,7 +29,18 @@
 //tesl4's 
 #include "Singleton.h"
 #include "Render.h"
+
+#include "Vertex.h"
+#include "Tesl4Obj.h"
 #include "ShaderBase.h"
 #include "ShaderInAct.h"
+#include "Mesh.h"
+
+
+/*
+#include "Mesh.h"
+#include "Shader.h"
+#include "Object.h"
+*/
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.

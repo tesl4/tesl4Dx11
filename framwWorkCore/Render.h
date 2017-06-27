@@ -10,9 +10,11 @@ class IDXGISwapChain;
 class ID3D11RenderTargetView;
 
 
-class CRender : public CSingleton<CRender>
+class CRender/* : public CSingleton<CRender>*/
 {
 private:
+	static CRender *m_Instance;
+
 	ID3D11Device			*m_pDevice;
 	ID3D11DeviceContext		*m_pContext;
 	IDXGISwapChain			*m_pSwapChain;
@@ -26,13 +28,22 @@ private:
 
 	
 public:
+	static CRender* GetInstance();
 
-	void InitializeRender(HWND _hwnd);
+	void InitializeRender();
 	void RenderStart();
 	void RenderEnd();
+	void SetClientSize(UINT _width, UINT _height);
+
 
 	ID3D11Device*			GetDevice();
 	ID3D11DeviceContext*	GetContext();
+	IDXGISwapChain*			GetSwapChain();
+	ID3D11RenderTargetView* GetRenderTargetView();
+
+	HRESULT	CreateRenderTargetView();
+	void SetViewport();
+
 
 	CRender() {};
 	~CRender() {};

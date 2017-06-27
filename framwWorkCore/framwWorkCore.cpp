@@ -31,24 +31,45 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     LoadStringW(hInstance, IDC_FRAMWWORKCORE, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
+	//std::vector<CVertex> 
+	CMesh *m_Mesh = nullptr;
+	CShaderBase *m_Shader = nullptr;
+
     // 응용 프로그램 초기화를 수행합니다.
     if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
     }
+	else
+	{
+		CRender::GetInstance()->InitializeRender();
+		m_Mesh = new CMesh();
+		m_Shader = new CShaderBase(L"Effect.fx");
+	}
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_FRAMWWORKCORE));
 
     MSG msg;
 
     // 기본 메시지 루프입니다.
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (1)
     {
-        if (!PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+			if (msg.message == WM_QUIT) break;
+			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
         }
+		else
+		{
+			CRender::GetInstance()->RenderStart();
+			m_Shader->Render();
+			m_Mesh->Render();
+			CRender::GetInstance()->RenderEnd();
+		}
     }
 
     return (int) msg.wParam;
@@ -124,6 +145,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+	case WM_SIZE:
+		/*CRender::GetInstance()->SetClientSize(LOWORD(lParam), HIWORD(lParam));
+		CRender::GetInstance()->GetContext()->OMSetRenderTargets(0, nullptr, nullptr);
+
+		CRender::GetInstance()->GetContext()->OMSetRenderTargets(0, nullptr, nullptr);
+		CRender::GetInstance()->GetRenderTargetView()->Release();
+		CRender::GetInstance()->GetSwapChain()->ResizeBuffers(2, LOWORD(lParam), HIWORD(lParam), DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+		CRender::GetInstance()->CreateRenderTargetView();
+*/
+
+
+		break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
